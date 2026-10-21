@@ -1,0 +1,302 @@
+---
+title: "Practice Exercise — Solutions (R)"
+subtitle: "Publication-Quality Visualization Workshop"
+author: "Yuyan Yi"
+date: "December 4, 2026"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    fig_width: 7
+    fig_height: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, dpi = 300)
+```
+
+> Worked solutions for all 9 practice exercise options, in R. These reuse the
+> exact approaches taught in the main workshop session. Run the data-loading
+> chunk first, then jump to whichever option(s) you worked on.
+
+## Load data
+
+```{r load-data}
+library(tidyverse)
+
+clinical_r <- read_csv("clinical_trial_data.csv")
+longitudinal_r <- read_csv("longitudinal_data.csv")
+pca_data_r <- read_csv("pca_data.csv")
+
+head(clinical_r)
+```
+
+---
+
+## Option 1: Table 1 comparing baseline characteristics by arm
+
+```{r option1}
+library(gtsummary)
+
+clinical_r %>%
+  select(arm, age, sex, smoker, biomarker, response_label) %>%
+  tbl_summary(
+    by = arm,
+    statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+    ),
+    digits = all_continuous() ~ 1
+  ) %>%
+  add_p(
+    test = list(
+      all_continuous() ~ "t.test",
+      all_categorical() ~ "chisq.test"
+    )
+  ) %>%
+  add_overall() %>%
+  bold_labels()
+```
+
+---
+
+## Option 2: Density plot or ridgeline plot
+
+Showing both — overlaid density by arm, and ridgeline by site.
+
+```{r option2a, fig.width=6, fig.height=4}
+ggplot(clinical_r, aes(x = followup_score, fill = arm)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_viridis_d(end = 0.8) +
+  labs(x = "Follow-up Score", y = "Density", fill = "Arm",
+       title = "Follow-up Score Distribution by Arm") +
+  theme_minimal(base_size = 12)
+```
+
+```{r option2b, fig.width=7, fig.height=5}
+library(ggridges)
+
+ggplot(clinical_r, aes(x = followup_score, y = site, fill = site)) +
+  geom_density_ridges(alpha = 0.7, scale = 1.2) +
+  scale_fill_viridis_d() +
+  labs(x = "Follow-up Score", y = NULL, title = "Follow-up Score Distribution by Site") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+```
+
+---
+
+## Option 3: Kaplan-Meier curve with risk table
+
+```{r option3, fig.width=7, fig.height=5}
+library(survival)
+library(survminer)
+
+fit <- survfit(Surv(time_months, event) ~ arm, data = clinical_r)
+
+ggsurvplot(
+  fit,
+  data = clinical_r,
+  pval = TRUE,
+  conf.int = TRUE,
+  risk.table = TRUE,
+  palette = c("#440154", "#21908C"),
+  xlab = "Time (months)",
+  ylab = "Survival Probability",
+  legend.title = "Arm",
+  ggtheme = theme_minimal(base_size = 12)
+)
+```
+
+---
+
+## Option 4: Forest plot across 3+ subgroups
+
+```{r option4, fig.width=7, fig.height=5}
+forest_data_r <- tibble(
+  subgroup = c("Overall", "Age under 58", "Age 58 plus", "Female", "Male"),
+  hr = c(0.72, 0.65, 0.81, 0.70, 0.75),
+  lower = c(0.55, 0.45, 0.58, 0.50, 0.52),
+  upper = c(0.94, 0.93, 1.13, 0.98, 1.08)
+) %>%
+  mutate(subgroup = fct_rev(fct_inorder(subgroup)))
+
+ggplot(forest_data_r, aes(x = hr, y = subgroup)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "gray50") +
+  geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2) +
+  geom_point(size = 3, color = "#21908C") +
+  scale_x_log10() +
+  labs(x = "Hazard Ratio (log scale)", y = NULL, title = "Treatment Effect by Subgroup") +
+  theme_minimal(base_size = 12)
+```
+
+---
+
+## Option 5: ROC curve with AUC
+
+```{r option5, fig.width=6, fig.height=6}
+library(pROC)
+
+roc_obj_r <- roc(clinical_r$responder, clinical_r$biomarker, quiet = TRUE)
+auc_val_r <- auc(roc_obj_r)
+
+ggroc(roc_obj_r, color = "#21908C", linewidth = 1.2) +
+  geom_abline(slope = 1, intercept = 1, linetype = "dashed", color = "gray50") +
+  annotate("text", x = 0.3, y = 0.2, label = sprintf("AUC = %.3f", auc_val_r), size = 5) +
+  labs(x = "Specificity", y = "Sensitivity", title = "ROC Curve: Biomarker Predicting Response") +
+  theme_minimal(base_size = 12)
+```
+
+---
+
+## Option 6: Line chart of score trajectory with error bars
+
+```{r option6, fig.width=7, fig.height=5}
+summary_r <- longitudinal_r %>%
+  group_by(arm, week) %>%
+  summarise(
+    mean_score = mean(score),
+    sd_score = sd(score),
+    se_score = sd_score / sqrt(n()),
+    .groups = "drop"
+  )
+
+ggplot(summary_r, aes(x = week, y = mean_score, color = arm, group = arm)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.5) +
+  geom_errorbar(
+    aes(ymin = mean_score - se_score, ymax = mean_score + se_score),
+    width = 0.5
+  ) +
+  scale_color_viridis_d(end = 0.8) +
+  labs(
+    x = "Week", y = "Mean Score (\u00b1 SE)", color = "Arm",
+    title = "Score Trajectory Over Time by Arm"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+---
+
+## Option 7: Annotated boxplot/mean+-SD bar comparing scores across site
+
+Showing the ANOVA + pairwise comparison version across `site`, with
+significance brackets, since this directly addresses "comparing scores
+across site."
+
+```{r option7}
+anova_model <- aov(followup_score ~ site, data = clinical_r)
+anova_summary <- summary(anova_model)
+anova_pvalue <- anova_summary[[1]][1, "Pr(>F)"]
+cat("ANOVA p-value:", format.pval(anova_pvalue, digits = 4), "\n")
+
+tukey_result <- TukeyHSD(anova_model)
+print(tukey_result)
+
+site_levels <- levels(factor(clinical_r$site))
+comparisons_list <- combn(site_levels, 2, simplify = FALSE)
+```
+
+```{r option7-plot, fig.width=7, fig.height=5}
+library(ggpubr)
+
+ggplot(clinical_r, aes(x = site, y = followup_score, fill = site)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(width = 0.15, alpha = 0.3) +
+  stat_compare_means(
+    method = "anova",
+    label.y = max(clinical_r$followup_score) * 1.5,
+    label.x = (length(site_levels) + 1) / 2,
+    hjust = 0.5
+  ) +
+  stat_compare_means(
+    comparisons = comparisons_list,
+    method = "t.test",
+    label = "p.signif",
+    step.increase = 0.08,
+    hide.ns = TRUE
+  ) +
+  scale_fill_viridis_d(end = 0.8) +
+  labs(x = NULL, y = "Follow-up Score", title = "Follow-up Score by Site") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+```
+
+---
+
+## Option 8: Stacked bar chart of smoker status by site
+
+```{r option8, fig.width=7, fig.height=5}
+smoker_summary_r <- clinical_r %>%
+  count(site, smoker) %>%
+  group_by(site) %>%
+  mutate(prop = n / sum(n))
+
+ggplot(smoker_summary_r, aes(x = site, y = prop, fill = smoker)) +
+  geom_col(position = "stack", width = 0.6) +
+  geom_text(
+    aes(label = scales::percent(prop, accuracy = 1)),
+    position = position_stack(vjust = 0.5), color = "white", size = 3.5
+  ) +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +  # Okabe-Ito
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = NULL, y = "Proportion", fill = "Smoking Status",
+       title = "Smoking Status Composition by Site") +
+  theme_minimal(base_size = 12)
+```
+
+> **Note:** this uses a 3-category version of the stacked bar chart taught in
+> the main workshop (which used 2 categories: Response/No Response). With 3
+> categories, stacking is still readable; beyond ~4 categories, consider a
+> grouped bar chart instead.
+
+---
+
+## Option 9: PCA score plot or biplot of the biomarker panel
+
+```{r option9a, fig.width=7, fig.height=5}
+biomarker_cols <- paste0("marker_", 1:6)
+
+pca_fit_r <- prcomp(pca_data_r[, biomarker_cols], center = TRUE, scale. = TRUE)
+var_explained_r <- (pca_fit_r$sdev^2) / sum(pca_fit_r$sdev^2) * 100
+
+pc_scores_r <- as_tibble(pca_fit_r$x) %>%
+  bind_cols(pca_data_r %>% select(arm, site))
+
+ggplot(pc_scores_r, aes(x = PC1, y = PC2, color = arm)) +
+  geom_point(size = 2.5, alpha = 0.75) +
+  stat_ellipse(level = 0.68) +
+  scale_color_viridis_d(end = 0.8) +
+  labs(
+    x = sprintf("PC1 (%.1f%% variance)", var_explained_r[1]),
+    y = sprintf("PC2 (%.1f%% variance)", var_explained_r[2]),
+    color = "Arm", title = "PCA of Biomarker Panel"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r option9b, fig.width=7, fig.height=6}
+loadings_r <- as_tibble(pca_fit_r$rotation[, 1:2], rownames = "biomarker")
+scale_factor <- max(abs(pc_scores_r$PC1), abs(pc_scores_r$PC2)) * 0.8
+
+ggplot() +
+  geom_point(data = pc_scores_r, aes(x = PC1, y = PC2, color = arm), size = 2, alpha = 0.6) +
+  geom_segment(
+    data = loadings_r,
+    aes(x = 0, y = 0, xend = PC1 * scale_factor, yend = PC2 * scale_factor),
+    arrow = arrow(length = unit(0.2, "cm")), color = "#D55E00"
+  ) +
+  geom_text(
+    data = loadings_r,
+    aes(x = PC1 * scale_factor * 1.15, y = PC2 * scale_factor * 1.15, label = biomarker),
+    color = "#D55E00", size = 3.5, fontface = "bold"
+  ) +
+  scale_color_viridis_d(end = 0.8) +
+  labs(
+    x = sprintf("PC1 (%.1f%% variance)", var_explained_r[1]),
+    y = sprintf("PC2 (%.1f%% variance)", var_explained_r[2]),
+    color = "Arm", title = "PCA Biplot: Scores + Biomarker Loadings"
+  ) +
+  theme_minimal(base_size = 12)
+```
