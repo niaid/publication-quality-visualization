@@ -97,7 +97,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#generate-synthetic-clinical-data" id="toc-generate-synthetic-clinical-data" class="nav-link" data-scroll-target="#generate-synthetic-clinical-data">1. Generate Synthetic Clinical Data</a>
   <ul class="collapse">
   <li><a href="#r-version" id="toc-r-version" class="nav-link" data-scroll-target="#r-version">R version</a></li>
-  <li><a href="#r-version-1" id="toc-r-version-1" class="nav-link" data-scroll-target="#r-version-1">R version</a></li>
   <li><a href="#python-version-reads-the-same-csv-for-consistency" id="toc-python-version-reads-the-same-csv-for-consistency" class="nav-link" data-scroll-target="#python-version-reads-the-same-csv-for-consistency">Python version (reads the same CSV for consistency)</a></li>
   <li><a href="#longitudinal-data-for-line-chart-section" id="toc-longitudinal-data-for-line-chart-section" class="nav-link" data-scroll-target="#longitudinal-data-for-line-chart-section">Longitudinal data (for line chart section)</a></li>
   </ul></li>
@@ -224,9 +223,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<blockquote class="blockquote">
-<p>Materials for this workshop were drafted with assistance from Claude (Anthropic) and reviewed and edited by the instructor.</p>
-</blockquote>
 <section id="setup" class="level2">
 <h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <p>This document runs both R and Python chunks side by side. In Positron, make sure you have both an R kernel and a Python (Jupyter) kernel available.</p>
@@ -342,81 +338,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Two companion datasets are generated later in the document: <code>longitudinal_data.csv</code> (same 200 patients, measured at 4 visits — week 0, 4, 8, 12) and <code>pca_data.csv</code> (same 200 patients with 6 synthetic correlated biomarkers, marker_1-marker_6).</p>
 <section id="r-version" class="level3">
 <h3 class="anchored" data-anchor-id="r-version">R version</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Column</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>patient_id</td>
-<td>ID</td>
-<td>Sequential, e.g.&nbsp;PT-001 to PT-200</td>
-</tr>
-<tr class="even">
-<td>arm</td>
-<td>Categorical (2 levels)</td>
-<td>Control or Treatment, randomly assigned ~50/50</td>
-</tr>
-<tr class="odd">
-<td>age</td>
-<td>Continuous</td>
-<td>Normally distributed, mean 58, SD 12</td>
-</tr>
-<tr class="even">
-<td>sex</td>
-<td>Categorical (2 levels)</td>
-<td>Female (52%) / Male (48%)</td>
-</tr>
-<tr class="odd">
-<td>site</td>
-<td>Categorical (4 levels)</td>
-<td>Site_1-Site_4, randomly assigned</td>
-</tr>
-<tr class="even">
-<td>smoker</td>
-<td>Categorical (3 levels)</td>
-<td>Never (50%), Former (30%), Current (20%)</td>
-</tr>
-<tr class="odd">
-<td>biomarker</td>
-<td>Continuous</td>
-<td>Right-skewed (gamma distribution, shape 2, scale 15)</td>
-</tr>
-<tr class="even">
-<td>baseline_score</td>
-<td>Continuous</td>
-<td>Normally distributed, mean 50, SD 10</td>
-</tr>
-<tr class="odd">
-<td>followup_score</td>
-<td>Continuous</td>
-<td>Baseline score minus a treatment effect (Treatment arm drops ~8 points on average; Control drops ~1 point)</td>
-</tr>
-<tr class="even">
-<td>responder / response_label</td>
-<td>Binary / Categorical</td>
-<td>1 = responder; higher response rate in Treatment (55%) vs.&nbsp;Control (30%)</td>
-</tr>
-<tr class="odd">
-<td>time_months / event</td>
-<td>Continuous / Binary</td>
-<td>Simulated time-to-event and event/censoring indicator (65% event rate)</td>
-</tr>
-</tbody>
-</table>
-<p>Two companion datasets are generated later in the document: <code>longitudinal_data.csv</code> (same 200 patients, measured at 4 visits — week 0, 4, 8, 12) and <code>pca_data.csv</code> (same 200 patients with 6 synthetic correlated biomarkers, marker_1-marker_6).</p>
-</section>
-<section id="r-version-1" class="level3">
-<h3 class="anchored" data-anchor-id="r-version-1">R version</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
@@ -735,7 +656,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th>Parameter</th>
-<th>ggplot2</th>
+<th>R (ggplot2)</th>
 <th>Python (matplotlib/seaborn)</th>
 <th>Typical publication value</th>
 </tr>
@@ -1629,149 +1550,144 @@ N = 111<span class="gt_footnote_marks" style="white-space:nowrap;font-style:ital
 <span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> col <span class="kw">in</span> table1_df.columns.to_flat_index()</span>
 <span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>]</span>
 <span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Rendered HTML version (shows up inline in Positron's Plots/Viewer output area,</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># the same way an R gt/gtsummary table does — not the raw-data Data Viewer grid).</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># This works because Jupyter-based front ends (which Positron's Python chunks</span></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># use) automatically render a DataFrame's _repr_html_() as rich output when</span></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># it's the last expression in a cell.</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: caption text omits "Table 1." since Quarto adds its own table</span></span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co"># numbering/label automatically -- including it in both places duplicates it</span></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co"># (e.g., "Table 1: Table 1. Baseline Characteristics by Arm").</span></span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>table1_df.style.set_caption(<span class="st">"Baseline Characteristics by Arm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: caption text omits "Table 1." since Quarto adds its own table</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># numbering/label automatically -- including it in both places duplicates it</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># (e.g., "Table 1: Table 1. Baseline Characteristics by Arm").</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>table1_df.style.set_caption(<span class="st">"Baseline Characteristics by Arm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <style type="text/css">
 </style>
 
-<div id="T_dbec1" class="quarto-float quarto-figure quarto-figure-center anchored" data-quarto-postprocess="true">
+<div id="T_736b9" class="quarto-float quarto-figure quarto-figure-center anchored" data-quarto-postprocess="true">
 <figure class="quarto-float quarto-float-tbl figure">
-<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="T_dbec1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="T_736b9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Table&nbsp;1: Baseline Characteristics by Arm
 </figcaption>
-<div aria-describedby="T_dbec1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<table id="T_dbec1" class="caption-top table table-sm table-striped small">
+<div aria-describedby="T_736b9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table id="T_736b9" class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th class="blank level0" data-quarto-table-cell-role="th">&nbsp;</th>
-<th id="T_dbec1_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Characteristic</th>
-<th id="T_dbec1_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Level</th>
-<th id="T_dbec1_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Missing</th>
-<th id="T_dbec1_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Overall</th>
-<th id="T_dbec1_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Control</th>
-<th id="T_dbec1_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">Treatment</th>
-<th id="T_dbec1_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">P-Value</th>
-<th id="T_dbec1_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">Test</th>
+<th id="T_736b9_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Characteristic</th>
+<th id="T_736b9_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Level</th>
+<th id="T_736b9_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Missing</th>
+<th id="T_736b9_level0_col3" class="col_heading level0 col3" data-quarto-table-cell-role="th">Overall</th>
+<th id="T_736b9_level0_col4" class="col_heading level0 col4" data-quarto-table-cell-role="th">Control</th>
+<th id="T_736b9_level0_col5" class="col_heading level0 col5" data-quarto-table-cell-role="th">Treatment</th>
+<th id="T_736b9_level0_col6" class="col_heading level0 col6" data-quarto-table-cell-role="th">P-Value</th>
+<th id="T_736b9_level0_col7" class="col_heading level0 col7" data-quarto-table-cell-role="th">Test</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<th id="T_dbec1_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">0</th>
-<td id="T_dbec1_row0_col0" class="data row0 col0">n</td>
-<td id="T_dbec1_row0_col1" class="data row0 col1"></td>
-<td id="T_dbec1_row0_col2" class="data row0 col2"></td>
-<td id="T_dbec1_row0_col3" class="data row0 col3">200</td>
-<td id="T_dbec1_row0_col4" class="data row0 col4">89</td>
-<td id="T_dbec1_row0_col5" class="data row0 col5">111</td>
-<td id="T_dbec1_row0_col6" class="data row0 col6"></td>
-<td id="T_dbec1_row0_col7" class="data row0 col7"></td>
+<th id="T_736b9_level0_row0" class="row_heading level0 row0" data-quarto-table-cell-role="th">0</th>
+<td id="T_736b9_row0_col0" class="data row0 col0">n</td>
+<td id="T_736b9_row0_col1" class="data row0 col1"></td>
+<td id="T_736b9_row0_col2" class="data row0 col2"></td>
+<td id="T_736b9_row0_col3" class="data row0 col3">200</td>
+<td id="T_736b9_row0_col4" class="data row0 col4">89</td>
+<td id="T_736b9_row0_col5" class="data row0 col5">111</td>
+<td id="T_736b9_row0_col6" class="data row0 col6"></td>
+<td id="T_736b9_row0_col7" class="data row0 col7"></td>
 </tr>
 <tr class="even">
-<th id="T_dbec1_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">1</th>
-<td id="T_dbec1_row1_col0" class="data row1 col0">age, mean (SD)</td>
-<td id="T_dbec1_row1_col1" class="data row1 col1"></td>
-<td id="T_dbec1_row1_col2" class="data row1 col2">0</td>
-<td id="T_dbec1_row1_col3" class="data row1 col3">57.4 (11.5)</td>
-<td id="T_dbec1_row1_col4" class="data row1 col4">57.1 (11.2)</td>
-<td id="T_dbec1_row1_col5" class="data row1 col5">57.7 (11.8)</td>
-<td id="T_dbec1_row1_col6" class="data row1 col6">0.719</td>
-<td id="T_dbec1_row1_col7" class="data row1 col7">Welch’s T-test</td>
+<th id="T_736b9_level0_row1" class="row_heading level0 row1" data-quarto-table-cell-role="th">1</th>
+<td id="T_736b9_row1_col0" class="data row1 col0">age, mean (SD)</td>
+<td id="T_736b9_row1_col1" class="data row1 col1"></td>
+<td id="T_736b9_row1_col2" class="data row1 col2">0</td>
+<td id="T_736b9_row1_col3" class="data row1 col3">57.4 (11.5)</td>
+<td id="T_736b9_row1_col4" class="data row1 col4">57.1 (11.2)</td>
+<td id="T_736b9_row1_col5" class="data row1 col5">57.7 (11.8)</td>
+<td id="T_736b9_row1_col6" class="data row1 col6">0.719</td>
+<td id="T_736b9_row1_col7" class="data row1 col7">Welch’s T-test</td>
 </tr>
 <tr class="odd">
-<th id="T_dbec1_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">2</th>
-<td id="T_dbec1_row2_col0" class="data row2 col0">sex, n (%)</td>
-<td id="T_dbec1_row2_col1" class="data row2 col1">Female</td>
-<td id="T_dbec1_row2_col2" class="data row2 col2"></td>
-<td id="T_dbec1_row2_col3" class="data row2 col3">107 (53.5)</td>
-<td id="T_dbec1_row2_col4" class="data row2 col4">46 (51.7)</td>
-<td id="T_dbec1_row2_col5" class="data row2 col5">61 (55.0)</td>
-<td id="T_dbec1_row2_col6" class="data row2 col6">0.750</td>
-<td id="T_dbec1_row2_col7" class="data row2 col7">Chi-squared</td>
+<th id="T_736b9_level0_row2" class="row_heading level0 row2" data-quarto-table-cell-role="th">2</th>
+<td id="T_736b9_row2_col0" class="data row2 col0">sex, n (%)</td>
+<td id="T_736b9_row2_col1" class="data row2 col1">Female</td>
+<td id="T_736b9_row2_col2" class="data row2 col2"></td>
+<td id="T_736b9_row2_col3" class="data row2 col3">107 (53.5)</td>
+<td id="T_736b9_row2_col4" class="data row2 col4">46 (51.7)</td>
+<td id="T_736b9_row2_col5" class="data row2 col5">61 (55.0)</td>
+<td id="T_736b9_row2_col6" class="data row2 col6">0.750</td>
+<td id="T_736b9_row2_col7" class="data row2 col7">Chi-squared</td>
 </tr>
 <tr class="even">
-<th id="T_dbec1_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">3</th>
-<td id="T_dbec1_row3_col0" class="data row3 col0">sex, n (%)</td>
-<td id="T_dbec1_row3_col1" class="data row3 col1">Male</td>
-<td id="T_dbec1_row3_col2" class="data row3 col2"></td>
-<td id="T_dbec1_row3_col3" class="data row3 col3">93 (46.5)</td>
-<td id="T_dbec1_row3_col4" class="data row3 col4">43 (48.3)</td>
-<td id="T_dbec1_row3_col5" class="data row3 col5">50 (45.0)</td>
-<td id="T_dbec1_row3_col6" class="data row3 col6"></td>
-<td id="T_dbec1_row3_col7" class="data row3 col7"></td>
+<th id="T_736b9_level0_row3" class="row_heading level0 row3" data-quarto-table-cell-role="th">3</th>
+<td id="T_736b9_row3_col0" class="data row3 col0">sex, n (%)</td>
+<td id="T_736b9_row3_col1" class="data row3 col1">Male</td>
+<td id="T_736b9_row3_col2" class="data row3 col2"></td>
+<td id="T_736b9_row3_col3" class="data row3 col3">93 (46.5)</td>
+<td id="T_736b9_row3_col4" class="data row3 col4">43 (48.3)</td>
+<td id="T_736b9_row3_col5" class="data row3 col5">50 (45.0)</td>
+<td id="T_736b9_row3_col6" class="data row3 col6"></td>
+<td id="T_736b9_row3_col7" class="data row3 col7"></td>
 </tr>
 <tr class="odd">
-<th id="T_dbec1_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">4</th>
-<td id="T_dbec1_row4_col0" class="data row4 col0">smoker, n (%)</td>
-<td id="T_dbec1_row4_col1" class="data row4 col1">Current</td>
-<td id="T_dbec1_row4_col2" class="data row4 col2"></td>
-<td id="T_dbec1_row4_col3" class="data row4 col3">42 (21.0)</td>
-<td id="T_dbec1_row4_col4" class="data row4 col4">18 (20.2)</td>
-<td id="T_dbec1_row4_col5" class="data row4 col5">24 (21.6)</td>
-<td id="T_dbec1_row4_col6" class="data row4 col6">0.725</td>
-<td id="T_dbec1_row4_col7" class="data row4 col7">Chi-squared</td>
+<th id="T_736b9_level0_row4" class="row_heading level0 row4" data-quarto-table-cell-role="th">4</th>
+<td id="T_736b9_row4_col0" class="data row4 col0">smoker, n (%)</td>
+<td id="T_736b9_row4_col1" class="data row4 col1">Current</td>
+<td id="T_736b9_row4_col2" class="data row4 col2"></td>
+<td id="T_736b9_row4_col3" class="data row4 col3">42 (21.0)</td>
+<td id="T_736b9_row4_col4" class="data row4 col4">18 (20.2)</td>
+<td id="T_736b9_row4_col5" class="data row4 col5">24 (21.6)</td>
+<td id="T_736b9_row4_col6" class="data row4 col6">0.725</td>
+<td id="T_736b9_row4_col7" class="data row4 col7">Chi-squared</td>
 </tr>
 <tr class="even">
-<th id="T_dbec1_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">5</th>
-<td id="T_dbec1_row5_col0" class="data row5 col0">smoker, n (%)</td>
-<td id="T_dbec1_row5_col1" class="data row5 col1">Former</td>
-<td id="T_dbec1_row5_col2" class="data row5 col2"></td>
-<td id="T_dbec1_row5_col3" class="data row5 col3">54 (27.0)</td>
-<td id="T_dbec1_row5_col4" class="data row5 col4">22 (24.7)</td>
-<td id="T_dbec1_row5_col5" class="data row5 col5">32 (28.8)</td>
-<td id="T_dbec1_row5_col6" class="data row5 col6"></td>
-<td id="T_dbec1_row5_col7" class="data row5 col7"></td>
+<th id="T_736b9_level0_row5" class="row_heading level0 row5" data-quarto-table-cell-role="th">5</th>
+<td id="T_736b9_row5_col0" class="data row5 col0">smoker, n (%)</td>
+<td id="T_736b9_row5_col1" class="data row5 col1">Former</td>
+<td id="T_736b9_row5_col2" class="data row5 col2"></td>
+<td id="T_736b9_row5_col3" class="data row5 col3">54 (27.0)</td>
+<td id="T_736b9_row5_col4" class="data row5 col4">22 (24.7)</td>
+<td id="T_736b9_row5_col5" class="data row5 col5">32 (28.8)</td>
+<td id="T_736b9_row5_col6" class="data row5 col6"></td>
+<td id="T_736b9_row5_col7" class="data row5 col7"></td>
 </tr>
 <tr class="odd">
-<th id="T_dbec1_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">6</th>
-<td id="T_dbec1_row6_col0" class="data row6 col0">smoker, n (%)</td>
-<td id="T_dbec1_row6_col1" class="data row6 col1">Never</td>
-<td id="T_dbec1_row6_col2" class="data row6 col2"></td>
-<td id="T_dbec1_row6_col3" class="data row6 col3">104 (52.0)</td>
-<td id="T_dbec1_row6_col4" class="data row6 col4">49 (55.1)</td>
-<td id="T_dbec1_row6_col5" class="data row6 col5">55 (49.5)</td>
-<td id="T_dbec1_row6_col6" class="data row6 col6"></td>
-<td id="T_dbec1_row6_col7" class="data row6 col7"></td>
+<th id="T_736b9_level0_row6" class="row_heading level0 row6" data-quarto-table-cell-role="th">6</th>
+<td id="T_736b9_row6_col0" class="data row6 col0">smoker, n (%)</td>
+<td id="T_736b9_row6_col1" class="data row6 col1">Never</td>
+<td id="T_736b9_row6_col2" class="data row6 col2"></td>
+<td id="T_736b9_row6_col3" class="data row6 col3">104 (52.0)</td>
+<td id="T_736b9_row6_col4" class="data row6 col4">49 (55.1)</td>
+<td id="T_736b9_row6_col5" class="data row6 col5">55 (49.5)</td>
+<td id="T_736b9_row6_col6" class="data row6 col6"></td>
+<td id="T_736b9_row6_col7" class="data row6 col7"></td>
 </tr>
 <tr class="even">
-<th id="T_dbec1_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">7</th>
-<td id="T_dbec1_row7_col0" class="data row7 col0">biomarker, mean (SD)</td>
-<td id="T_dbec1_row7_col1" class="data row7 col1"></td>
-<td id="T_dbec1_row7_col2" class="data row7 col2">0</td>
-<td id="T_dbec1_row7_col3" class="data row7 col3">29.2 (19.2)</td>
-<td id="T_dbec1_row7_col4" class="data row7 col4">26.9 (17.3)</td>
-<td id="T_dbec1_row7_col5" class="data row7 col5">31.1 (20.5)</td>
-<td id="T_dbec1_row7_col6" class="data row7 col6">0.120</td>
-<td id="T_dbec1_row7_col7" class="data row7 col7">Welch’s T-test</td>
+<th id="T_736b9_level0_row7" class="row_heading level0 row7" data-quarto-table-cell-role="th">7</th>
+<td id="T_736b9_row7_col0" class="data row7 col0">biomarker, mean (SD)</td>
+<td id="T_736b9_row7_col1" class="data row7 col1"></td>
+<td id="T_736b9_row7_col2" class="data row7 col2">0</td>
+<td id="T_736b9_row7_col3" class="data row7 col3">29.2 (19.2)</td>
+<td id="T_736b9_row7_col4" class="data row7 col4">26.9 (17.3)</td>
+<td id="T_736b9_row7_col5" class="data row7 col5">31.1 (20.5)</td>
+<td id="T_736b9_row7_col6" class="data row7 col6">0.120</td>
+<td id="T_736b9_row7_col7" class="data row7 col7">Welch’s T-test</td>
 </tr>
 <tr class="odd">
-<th id="T_dbec1_level0_row8" class="row_heading level0 row8" data-quarto-table-cell-role="th">8</th>
-<td id="T_dbec1_row8_col0" class="data row8 col0">response_label, n (%)</td>
-<td id="T_dbec1_row8_col1" class="data row8 col1">No Response</td>
-<td id="T_dbec1_row8_col2" class="data row8 col2"></td>
-<td id="T_dbec1_row8_col3" class="data row8 col3">110 (55.0)</td>
-<td id="T_dbec1_row8_col4" class="data row8 col4">60 (67.4)</td>
-<td id="T_dbec1_row8_col5" class="data row8 col5">50 (45.0)</td>
-<td id="T_dbec1_row8_col6" class="data row8 col6">0.003</td>
-<td id="T_dbec1_row8_col7" class="data row8 col7">Chi-squared</td>
+<th id="T_736b9_level0_row8" class="row_heading level0 row8" data-quarto-table-cell-role="th">8</th>
+<td id="T_736b9_row8_col0" class="data row8 col0">response_label, n (%)</td>
+<td id="T_736b9_row8_col1" class="data row8 col1">No Response</td>
+<td id="T_736b9_row8_col2" class="data row8 col2"></td>
+<td id="T_736b9_row8_col3" class="data row8 col3">110 (55.0)</td>
+<td id="T_736b9_row8_col4" class="data row8 col4">60 (67.4)</td>
+<td id="T_736b9_row8_col5" class="data row8 col5">50 (45.0)</td>
+<td id="T_736b9_row8_col6" class="data row8 col6">0.003</td>
+<td id="T_736b9_row8_col7" class="data row8 col7">Chi-squared</td>
 </tr>
 <tr class="even">
-<th id="T_dbec1_level0_row9" class="row_heading level0 row9" data-quarto-table-cell-role="th">9</th>
-<td id="T_dbec1_row9_col0" class="data row9 col0">response_label, n (%)</td>
-<td id="T_dbec1_row9_col1" class="data row9 col1">Response</td>
-<td id="T_dbec1_row9_col2" class="data row9 col2"></td>
-<td id="T_dbec1_row9_col3" class="data row9 col3">90 (45.0)</td>
-<td id="T_dbec1_row9_col4" class="data row9 col4">29 (32.6)</td>
-<td id="T_dbec1_row9_col5" class="data row9 col5">61 (55.0)</td>
-<td id="T_dbec1_row9_col6" class="data row9 col6"></td>
-<td id="T_dbec1_row9_col7" class="data row9 col7"></td>
+<th id="T_736b9_level0_row9" class="row_heading level0 row9" data-quarto-table-cell-role="th">9</th>
+<td id="T_736b9_row9_col0" class="data row9 col0">response_label, n (%)</td>
+<td id="T_736b9_row9_col1" class="data row9 col1">Response</td>
+<td id="T_736b9_row9_col2" class="data row9 col2"></td>
+<td id="T_736b9_row9_col3" class="data row9 col3">90 (45.0)</td>
+<td id="T_736b9_row9_col4" class="data row9 col4">29 (32.6)</td>
+<td id="T_736b9_row9_col5" class="data row9 col5">61 (55.0)</td>
+<td id="T_736b9_row9_col6" class="data row9 col6"></td>
+<td id="T_736b9_row9_col7" class="data row9 col7"></td>
 </tr>
 </tbody>
 </table>
@@ -2028,7 +1944,7 @@ Table&nbsp;1: Baseline Characteristics by Arm
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(clinical_r, <span class="fu">aes</span>(<span class="at">x =</span> followup_score, <span class="at">fill =</span> arm)) <span class="sc">+</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Follow-up Score"</span>, <span class="at">y =</span> <span class="st">"Density"</span>, <span class="at">fill =</span> <span class="st">"Arm"</span>,</span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Follow-up Score Distribution by Arm"</span>) <span class="sc">+</span></span>
 <span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2079,7 +1995,7 @@ Table&nbsp;1: Baseline Characteristics by Arm
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(clinical_r, <span class="fu">aes</span>(<span class="at">x =</span> followup_score, <span class="at">y =</span> site, <span class="at">fill =</span> site)) <span class="sc">+</span></span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">scale =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Follow-up Score"</span>, <span class="at">y =</span> <span class="cn">NULL</span>, <span class="at">title =</span> <span class="st">"Follow-up Score Distribution by Site"</span>) <span class="sc">+</span></span>
 <span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2353,7 +2269,7 @@ Table&nbsp;1: Baseline Characteristics by Arm
 <span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"wilcox.test"</span>, <span class="at">label =</span> <span class="st">"p.format"</span>,</span>
 <span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.x =</span> <span class="fl">1.5</span>, <span class="at">hjust =</span> <span class="fl">0.5</span></span>
 <span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
 <span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Follow-up Score"</span>, <span class="at">title =</span> <span class="st">"Follow-up Score by Arm"</span>) <span class="sc">+</span></span>
 <span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
 <span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2459,20 +2375,15 @@ Table&nbsp;1: Baseline Characteristics by Arm
 <span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(summary_stats_r, <span class="fu">aes</span>(<span class="at">x =</span> arm, <span class="at">y =</span> mean_val, <span class="at">fill =</span> arm)) <span class="sc">+</span></span>
 <span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
-<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> mean_val <span class="sc">-</span> sd_val, <span class="at">ymax =</span> mean_val <span class="sc">+</span> sd_val),</span>
-<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.2</span></span>
-<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(</span>
-<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> clinical_r, <span class="fu">aes</span>(<span class="at">x =</span> arm, <span class="at">y =</span> followup_score),</span>
-<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
-<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">2</span>, <span class="at">y =</span> y_bracket, <span class="at">yend =</span> y_bracket) <span class="sc">+</span></span>
-<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">1.5</span>, <span class="at">y =</span> y_bracket <span class="sc">*</span> <span class="fl">1.5</span>, <span class="at">label =</span> stars_r, <span class="at">size =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
-<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Follow-up Score (Mean ± SD)"</span>, <span class="at">title =</span> <span class="st">"Mean Follow-up Score by Arm"</span>) <span class="sc">+</span></span>
-<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_val <span class="sc">-</span> sd_val, <span class="at">ymax =</span> mean_val <span class="sc">+</span> sd_val), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> clinical_r, <span class="fu">aes</span>(<span class="at">x =</span> arm, <span class="at">y =</span> followup_score),</span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>              <span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"segment"</span>, <span class="at">x =</span> <span class="dv">1</span>, <span class="at">xend =</span> <span class="dv">2</span>, <span class="at">y =</span> y_bracket, <span class="at">yend =</span> y_bracket) <span class="sc">+</span></span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">1.5</span>, <span class="at">y =</span> y_bracket <span class="sc">*</span> <span class="fl">1.03</span>, <span class="at">label =</span> stars_r, <span class="at">size =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Follow-up Score (Mean \u00b1 SD)"</span>, <span class="at">title =</span> <span class="st">"Mean Follow-up Score by Arm"</span>) <span class="sc">+</span></span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2511,29 +2422,26 @@ Table&nbsp;1: Baseline Characteristics by Arm
 <span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
 <span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>x_pos <span class="op">=</span> np.arange(<span class="bu">len</span>(summary_stats_py))</span>
 <span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>ax.bar(</span>
-<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>    x_pos, summary_stats_py[<span class="st">"mean_val"</span>],</span>
-<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a>    yerr<span class="op">=</span>summary_stats_py[<span class="st">"sd_val"</span>], capsize<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>[<span class="st">"#440154"</span>, <span class="st">"#21908C"</span>], alpha<span class="op">=</span><span class="fl">0.7</span>, width<span class="op">=</span><span class="fl">0.6</span></span>
-<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-30"><a href="#cb54-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, arm <span class="kw">in</span> <span class="bu">enumerate</span>(summary_stats_py[<span class="st">"arm"</span>]):</span>
-<span id="cb54-31"><a href="#cb54-31" aria-hidden="true" tabindex="-1"></a>    vals <span class="op">=</span> clinical_py.loc[clinical_py.arm <span class="op">==</span> arm, <span class="st">"followup_score"</span>]</span>
-<span id="cb54-32"><a href="#cb54-32" aria-hidden="true" tabindex="-1"></a>    jitter <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.04</span>, size<span class="op">=</span><span class="bu">len</span>(vals))</span>
-<span id="cb54-33"><a href="#cb54-33" aria-hidden="true" tabindex="-1"></a>    ax.scatter(np.full(<span class="bu">len</span>(vals), i) <span class="op">+</span> jitter, vals, color<span class="op">=</span><span class="st">"black"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">15</span>)</span>
-<span id="cb54-34"><a href="#cb54-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-35"><a href="#cb54-35" aria-hidden="true" tabindex="-1"></a>y_bracket <span class="op">=</span> (summary_stats_py[<span class="st">"mean_val"</span>] <span class="op">+</span> summary_stats_py[<span class="st">"sd_val"</span>]).<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.12</span></span>
-<span id="cb54-36"><a href="#cb54-36" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>], [y_bracket, y_bracket<span class="op">*</span><span class="fl">1.02</span>, y_bracket<span class="op">*</span><span class="fl">1.02</span>, y_bracket], lw<span class="op">=</span><span class="fl">1.2</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
-<span id="cb54-37"><a href="#cb54-37" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.5</span>, y_bracket <span class="op">*</span> <span class="fl">1.3</span>, stars_py, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb54-38"><a href="#cb54-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-39"><a href="#cb54-39" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(x_pos)</span>
-<span id="cb54-40"><a href="#cb54-40" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(summary_stats_py[<span class="st">"arm"</span>])</span>
-<span id="cb54-41"><a href="#cb54-41" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Follow-up Score (Mean ± SD)"</span>)</span>
-<span id="cb54-42"><a href="#cb54-42" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Mean Follow-up Score by Arm"</span>)</span>
-<span id="cb54-43"><a href="#cb54-43" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_ylim(top<span class="op">=</span>y_bracket <span class="op">*</span> <span class="fl">1.15</span>)</span>
-<span id="cb54-44"><a href="#cb54-44" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
-<span id="cb54-45"><a href="#cb54-45" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb54-46"><a href="#cb54-46" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>ax.bar(x_pos, summary_stats_py[<span class="st">"mean_val"</span>], yerr<span class="op">=</span>summary_stats_py[<span class="st">"sd_val"</span>], capsize<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>       color<span class="op">=</span>[<span class="st">"#440154"</span>, <span class="st">"#21908C"</span>], alpha<span class="op">=</span><span class="fl">0.7</span>, width<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, arm <span class="kw">in</span> <span class="bu">enumerate</span>(summary_stats_py[<span class="st">"arm"</span>]):</span>
+<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>    vals <span class="op">=</span> clinical_py.loc[clinical_py.arm <span class="op">==</span> arm, <span class="st">"followup_score"</span>]</span>
+<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a>    jitter <span class="op">=</span> np.random.normal(<span class="dv">0</span>, <span class="fl">0.04</span>, size<span class="op">=</span><span class="bu">len</span>(vals))</span>
+<span id="cb54-30"><a href="#cb54-30" aria-hidden="true" tabindex="-1"></a>    ax.scatter(np.full(<span class="bu">len</span>(vals), i) <span class="op">+</span> jitter, vals, color<span class="op">=</span><span class="st">"black"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, s<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb54-31"><a href="#cb54-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-32"><a href="#cb54-32" aria-hidden="true" tabindex="-1"></a>y_bracket <span class="op">=</span> (summary_stats_py[<span class="st">"mean_val"</span>] <span class="op">+</span> summary_stats_py[<span class="st">"sd_val"</span>]).<span class="bu">max</span>() <span class="op">*</span> <span class="fl">1.12</span></span>
+<span id="cb54-33"><a href="#cb54-33" aria-hidden="true" tabindex="-1"></a>ax.plot([<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>], [y_bracket, y_bracket<span class="op">*</span><span class="fl">1.02</span>, y_bracket<span class="op">*</span><span class="fl">1.02</span>, y_bracket], lw<span class="op">=</span><span class="fl">1.2</span>, color<span class="op">=</span><span class="st">"black"</span>)</span>
+<span id="cb54-34"><a href="#cb54-34" aria-hidden="true" tabindex="-1"></a>ax.text(<span class="fl">0.5</span>, y_bracket <span class="op">*</span> <span class="fl">1.04</span>, stars_py, ha<span class="op">=</span><span class="st">"center"</span>, va<span class="op">=</span><span class="st">"bottom"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb54-35"><a href="#cb54-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-36"><a href="#cb54-36" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(x_pos)</span>
+<span id="cb54-37"><a href="#cb54-37" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(summary_stats_py[<span class="st">"arm"</span>])</span>
+<span id="cb54-38"><a href="#cb54-38" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Follow-up Score (Mean ± SD)"</span>)</span>
+<span id="cb54-39"><a href="#cb54-39" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Mean Follow-up Score by Arm"</span>)</span>
+<span id="cb54-40"><a href="#cb54-40" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_ylim(top<span class="op">=</span>y_bracket <span class="op">*</span> <span class="fl">1.15</span>)</span>
+<span id="cb54-41"><a href="#cb54-41" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
+<span id="cb54-42"><a href="#cb54-42" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb54-43"><a href="#cb54-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -2590,7 +2498,7 @@ Site_4-Site_3  7.92595321   1.899625 13.952281 0.0043829</code></pre>
 <span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_compare_means</span>(</span>
 <span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"anova"</span>,</span>
-<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.y =</span> <span class="fu">max</span>(clinical_r<span class="sc">$</span>followup_score) <span class="sc">*</span> <span class="fl">1.15</span>,</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.y =</span> <span class="fu">max</span>(clinical_r<span class="sc">$</span>followup_score) <span class="sc">*</span> <span class="fl">1.5</span>,</span>
 <span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.x =</span> (<span class="fu">length</span>(site_levels) <span class="sc">+</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="dv">2</span>,</span>
 <span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span></span>
 <span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
@@ -2697,11 +2605,11 @@ Site_3 Site_4    7.926 0.0044   1.8996 13.9523   True
 <span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>    ax.text((i<span class="op">+</span>j)<span class="op">/</span><span class="dv">2</span>, bracket_y <span class="op">+</span> step<span class="op">*</span><span class="fl">0.25</span>, stars, ha<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
 <span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>    bracket_y <span class="op">+=</span> step</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[&lt;matplotlib.lines.Line2D object at 0x30277b150&gt;]
+<pre><code>[&lt;matplotlib.lines.Line2D object at 0x314074250&gt;]
 Text(1.0, 79.06369126328886, '**')
-[&lt;matplotlib.lines.Line2D object at 0x3027f3790&gt;]
+[&lt;matplotlib.lines.Line2D object at 0x16f6ee250&gt;]
 Text(1.5, 84.974995282974, '***')
-[&lt;matplotlib.lines.Line2D object at 0x304cfcf90&gt;]
+[&lt;matplotlib.lines.Line2D object at 0x16f68e610&gt;]
 Text(2.5, 90.88629930265915, '**')</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_xlabel(<span class="va">None</span>)</span>
@@ -2798,7 +2706,7 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>ax.legend(title<span class="op">=</span><span class="va">None</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.02</span>, <span class="dv">1</span>), loc<span class="op">=</span><span class="st">"upper left"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;matplotlib.legend.Legend object at 0x304c4a710&gt;</code></pre>
+<pre><code>&lt;matplotlib.legend.Legend object at 0x16f69fd50&gt;</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(response_summary_py.index, rotation<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -2894,7 +2802,7 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 <span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc_scores_r, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> arm)) <span class="sc">+</span></span>
 <span id="cb93-12"><a href="#cb93-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ellipse</span>(<span class="at">level =</span> <span class="fl">0.68</span>) <span class="sc">+</span></span>
+<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ellipse</span>(<span class="at">level =</span> <span class="fl">0.95</span>) <span class="sc">+</span></span>
 <span id="cb93-14"><a href="#cb93-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
 <span id="cb93-15"><a href="#cb93-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb93-16"><a href="#cb93-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">sprintf</span>(<span class="st">"PC1 (%.1f%% variance)"</span>, var_explained_r[<span class="dv">1</span>]),</span>
@@ -2915,27 +2823,49 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 <section id="python-scikit-learn-matplotlib" class="level4">
 <h4 class="anchored" data-anchor-id="python-scikit-learn-matplotlib">Python — scikit-learn + matplotlib</h4>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>biomarker_cols <span class="op">=</span> [<span class="ss">f"marker_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)]</span>
-<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pca_data_py[biomarker_cols].values</span>
-<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> StandardScaler().fit_transform(X)</span>
-<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>pc_scores <span class="op">=</span> pca.fit_transform(X_scaled)</span>
-<span id="cb94-10"><a href="#cb94-10" aria-hidden="true" tabindex="-1"></a>var_explained <span class="op">=</span> pca.explained_variance_ratio_ <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-12"><a href="#cb94-12" aria-hidden="true" tabindex="-1"></a>pc_df <span class="op">=</span> pd.DataFrame(pc_scores, columns<span class="op">=</span>[<span class="st">"PC1"</span>, <span class="st">"PC2"</span>])</span>
-<span id="cb94-13"><a href="#cb94-13" aria-hidden="true" tabindex="-1"></a>pc_df[<span class="st">"arm"</span>] <span class="op">=</span> pca_data_py[<span class="st">"arm"</span>].values</span>
-<span id="cb94-14"><a href="#cb94-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-15"><a href="#cb94-15" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
-<span id="cb94-16"><a href="#cb94-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> arm_name, color <span class="kw">in</span> colors.items():</span>
-<span id="cb94-17"><a href="#cb94-17" aria-hidden="true" tabindex="-1"></a>    sub <span class="op">=</span> pc_df[pc_df.arm <span class="op">==</span> arm_name]</span>
-<span id="cb94-18"><a href="#cb94-18" aria-hidden="true" tabindex="-1"></a>    ax.scatter(sub[<span class="st">"PC1"</span>], sub[<span class="st">"PC2"</span>], color<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.75</span>, s<span class="op">=</span><span class="dv">40</span>, label<span class="op">=</span>arm_name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> chi2</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Ellipse</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add_confidence_ellipse(x, y, ax, level<span class="op">=</span><span class="fl">0.95</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Draw a covariance ellipse containing `level` of a bivariate normal."""</span></span>
+<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(x) <span class="op">&lt;</span> <span class="dv">3</span>:</span>
+<span id="cb94-10"><a href="#cb94-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a>    cov <span class="op">=</span> np.cov(x, y)</span>
+<span id="cb94-12"><a href="#cb94-12" aria-hidden="true" tabindex="-1"></a>    eigvals, eigvecs <span class="op">=</span> np.linalg.eigh(cov)</span>
+<span id="cb94-13"><a href="#cb94-13" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> eigvals.argsort()[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb94-14"><a href="#cb94-14" aria-hidden="true" tabindex="-1"></a>    eigvals, eigvecs <span class="op">=</span> eigvals[order], eigvecs[:, order]</span>
+<span id="cb94-15"><a href="#cb94-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-16"><a href="#cb94-16" aria-hidden="true" tabindex="-1"></a>    angle <span class="op">=</span> np.degrees(np.arctan2(eigvecs[<span class="dv">1</span>, <span class="dv">0</span>], eigvecs[<span class="dv">0</span>, <span class="dv">0</span>]))</span>
+<span id="cb94-17"><a href="#cb94-17" aria-hidden="true" tabindex="-1"></a>    scale <span class="op">=</span> np.sqrt(chi2.ppf(level, df<span class="op">=</span><span class="dv">2</span>))</span>
+<span id="cb94-18"><a href="#cb94-18" aria-hidden="true" tabindex="-1"></a>    width, height <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> scale <span class="op">*</span> np.sqrt(eigvals)   <span class="co"># full axis lengths</span></span>
+<span id="cb94-19"><a href="#cb94-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-20"><a href="#cb94-20" aria-hidden="true" tabindex="-1"></a>    ell <span class="op">=</span> Ellipse(xy<span class="op">=</span>(np.mean(x), np.mean(y)), width<span class="op">=</span>width, height<span class="op">=</span>height,</span>
+<span id="cb94-21"><a href="#cb94-21" aria-hidden="true" tabindex="-1"></a>                  angle<span class="op">=</span>angle, fill<span class="op">=</span><span class="va">False</span>, <span class="op">**</span>kwargs)</span>
+<span id="cb94-22"><a href="#cb94-22" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(ell)</span>
+<span id="cb94-23"><a href="#cb94-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-24"><a href="#cb94-24" aria-hidden="true" tabindex="-1"></a>biomarker_cols <span class="op">=</span> [<span class="ss">f"marker_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>)]</span>
+<span id="cb94-25"><a href="#cb94-25" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pca_data_py[biomarker_cols].values</span>
+<span id="cb94-26"><a href="#cb94-26" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> StandardScaler().fit_transform(X)</span>
+<span id="cb94-27"><a href="#cb94-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-28"><a href="#cb94-28" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb94-29"><a href="#cb94-29" aria-hidden="true" tabindex="-1"></a>pc_scores <span class="op">=</span> pca.fit_transform(X_scaled)</span>
+<span id="cb94-30"><a href="#cb94-30" aria-hidden="true" tabindex="-1"></a>var_explained <span class="op">=</span> pca.explained_variance_ratio_ <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb94-31"><a href="#cb94-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-32"><a href="#cb94-32" aria-hidden="true" tabindex="-1"></a>pc_df <span class="op">=</span> pd.DataFrame(pc_scores, columns<span class="op">=</span>[<span class="st">"PC1"</span>, <span class="st">"PC2"</span>])</span>
+<span id="cb94-33"><a href="#cb94-33" aria-hidden="true" tabindex="-1"></a>pc_df[<span class="st">"arm"</span>] <span class="op">=</span> pca_data_py[<span class="st">"arm"</span>].values</span>
+<span id="cb94-34"><a href="#cb94-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-35"><a href="#cb94-35" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="dv">5</span>))</span>
+<span id="cb94-36"><a href="#cb94-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> arm_name, color <span class="kw">in</span> colors.items():</span>
+<span id="cb94-37"><a href="#cb94-37" aria-hidden="true" tabindex="-1"></a>    sub <span class="op">=</span> pc_df[pc_df.arm <span class="op">==</span> arm_name]</span>
+<span id="cb94-38"><a href="#cb94-38" aria-hidden="true" tabindex="-1"></a>    ax.scatter(sub[<span class="st">"PC1"</span>], sub[<span class="st">"PC2"</span>], color<span class="op">=</span>color, alpha<span class="op">=</span><span class="fl">0.75</span>, s<span class="op">=</span><span class="dv">40</span>, label<span class="op">=</span>arm_name)</span>
+<span id="cb94-39"><a href="#cb94-39" aria-hidden="true" tabindex="-1"></a>    add_confidence_ellipse(sub[<span class="st">"PC1"</span>].values, sub[<span class="st">"PC2"</span>].values, ax,</span>
+<span id="cb94-40"><a href="#cb94-40" aria-hidden="true" tabindex="-1"></a>                           level<span class="op">=</span><span class="fl">0.95</span>, edgecolor<span class="op">=</span>color, linewidth<span class="op">=</span><span class="fl">1.5</span>, linestyle<span class="op">=</span><span class="st">"--"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;matplotlib.collections.PathCollection object at 0x309f7cd90&gt;
-&lt;matplotlib.collections.PathCollection object at 0x314434510&gt;</code></pre>
+<pre><code>&lt;matplotlib.collections.PathCollection object at 0x30b787b90&gt;
+&lt;matplotlib.collections.PathCollection object at 0x3162684d0&gt;</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_xlabel(<span class="ss">f"PC1 (</span><span class="sc">{</span>var_explained[<span class="dv">0</span>]<span class="sc">:.1f}</span><span class="ss">% variance)"</span>)</span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_ylabel(<span class="ss">f"PC2 (</span><span class="sc">{</span>var_explained[<span class="dv">1</span>]<span class="sc">:.1f}</span><span class="ss">% variance)"</span>)</span>
@@ -2954,6 +2884,9 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 </div>
 <blockquote class="blockquote">
 <p><strong>Teaching note:</strong> scaling (<code>scale. = TRUE</code> in R, <code>StandardScaler</code> in Python) matters a lot for PCA — without it, biomarkers measured on larger numeric scales will dominate the components purely due to units, not biological signal. Always scale unless your features are already on a comparable, meaningful common scale.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><strong>Sign flips:</strong> Eigenvectors are only defined up to sign, so PC1 in R can be the negative of PC1 in Python. Both are correct. The scores and loadings are mirrored, and the variance explained is identical. If you need them to match for a plot, flip the sign of the affected component.</p>
 </blockquote>
 </section>
 </section>
@@ -3069,18 +3002,34 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 <span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cumulative =</span> <span class="fu">cumsum</span>(var_explained_r)</span>
 <span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scree_df_r, <span class="fu">aes</span>(<span class="at">x =</span> PC)) <span class="sc">+</span></span>
-<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">y =</span> variance), <span class="at">fill =</span> <span class="st">"#21908C"</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> cumulative, <span class="at">group =</span> <span class="dv">1</span>), <span class="at">color =</span> <span class="st">"#D55E00"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> cumulative), <span class="at">color =</span> <span class="st">"#D55E00"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> variance, <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f%%"</span>, variance)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb99-12"><a href="#cb99-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> cumulative, <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.0f%%"</span>, cumulative)),</span>
-<span id="cb99-13"><a href="#cb99-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#D55E00"</span>) <span class="sc">+</span></span>
-<span id="cb99-14"><a href="#cb99-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">105</span>)) <span class="sc">+</span></span>
-<span id="cb99-15"><a href="#cb99-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"% Variance Explained"</span>,</span>
-<span id="cb99-16"><a href="#cb99-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Scree Plot"</span>,</span>
-<span id="cb99-17"><a href="#cb99-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Bars: individual PC variance  |  Line: cumulative variance"</span>) <span class="sc">+</span></span>
-<span id="cb99-18"><a href="#cb99-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>lvls <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Cumulative"</span>,<span class="st">"Individual"</span>)</span>
+<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(scree_df_r, <span class="fu">aes</span>(<span class="at">x =</span> PC)) <span class="sc">+</span></span>
+<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">y =</span> variance, <span class="at">fill =</span> <span class="st">"Individual"</span>), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> cumulative, <span class="at">group =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"Cumulative"</span>),</span>
+<span id="cb99-12"><a href="#cb99-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb99-13"><a href="#cb99-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> cumulative, <span class="at">color =</span> <span class="st">"Cumulative"</span>), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb99-14"><a href="#cb99-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> variance, <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f%%"</span>, variance)),</span>
+<span id="cb99-15"><a href="#cb99-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb99-16"><a href="#cb99-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">y =</span> cumulative, <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.0f%%"</span>, cumulative)),</span>
+<span id="cb99-17"><a href="#cb99-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="fl">1.8</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"#D55E00"</span>) <span class="sc">+</span></span>
+<span id="cb99-18"><a href="#cb99-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb99-19"><a href="#cb99-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>, <span class="at">limits =</span> lvls,</span>
+<span id="cb99-20"><a href="#cb99-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Individual"</span> <span class="ot">=</span> <span class="st">"#73b8ca"</span>, <span class="st">"Cumulative"</span> <span class="ot">=</span> <span class="cn">NA</span>)</span>
+<span id="cb99-21"><a href="#cb99-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb99-22"><a href="#cb99-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb99-23"><a href="#cb99-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="cn">NULL</span>, <span class="at">limits =</span> lvls,</span>
+<span id="cb99-24"><a href="#cb99-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Individual"</span> <span class="ot">=</span> <span class="cn">NA</span>, <span class="st">"Cumulative"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>)</span>
+<span id="cb99-25"><a href="#cb99-25" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb99-26"><a href="#cb99-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">105</span>)) <span class="sc">+</span></span>
+<span id="cb99-27"><a href="#cb99-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"% Variance Explained"</span>, <span class="at">title =</span> <span class="st">"Scree Plot"</span>) <span class="sc">+</span></span>
+<span id="cb99-28"><a href="#cb99-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb99-29"><a href="#cb99-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb99-30"><a href="#cb99-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"inside"</span>,</span>
+<span id="cb99-31"><a href="#cb99-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position.inside =</span> <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.45</span>),</span>
+<span id="cb99-32"><a href="#cb99-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">color =</span> <span class="st">"grey80"</span>),</span>
+<span id="cb99-33"><a href="#cb99-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">4</span>, <span class="dv">6</span>)</span>
+<span id="cb99-34"><a href="#cb99-34" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3096,20 +3045,20 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 <span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
 <span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>pcs <span class="op">=</span> [<span class="ss">f"PC</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(var_explained_full))]</span>
-<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>ax.bar(pcs, var_explained_full, color<span class="op">=</span><span class="st">"#21908C"</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"Individual"</span>)</span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>ax.bar(pcs, var_explained_full, color<span class="op">=</span><span class="st">"#73b8ca"</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="st">"Individual"</span>)</span>
 <span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>ax.plot(pcs, cumulative_full, color<span class="op">=</span><span class="st">"#D55E00"</span>, marker<span class="op">=</span><span class="st">"o"</span>, linewidth<span class="op">=</span><span class="dv">2</span>, label<span class="op">=</span><span class="st">"Cumulative"</span>)</span>
 <span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(var_explained_full):</span>
 <span id="cb100-11"><a href="#cb100-11" aria-hidden="true" tabindex="-1"></a>    ax.text(i, v <span class="op">+</span> <span class="dv">2</span>, <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.1f}</span><span class="ss">%"</span>, ha<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
 <span id="cb100-12"><a href="#cb100-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(cumulative_full):</span>
-<span id="cb100-13"><a href="#cb100-13" aria-hidden="true" tabindex="-1"></a>    ax.text(i, v <span class="op">+</span> <span class="dv">2</span>, <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0f}</span><span class="ss">%"</span>, ha<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>, color<span class="op">=</span><span class="st">"#D55E00"</span>)</span>
+<span id="cb100-13"><a href="#cb100-13" aria-hidden="true" tabindex="-1"></a>    ax.text(i, v <span class="op">-</span> <span class="dv">6</span>, <span class="ss">f"</span><span class="sc">{</span>v<span class="sc">:.0f}</span><span class="ss">%"</span>, ha<span class="op">=</span><span class="st">"center"</span>, fontsize<span class="op">=</span><span class="dv">8</span>, color<span class="op">=</span><span class="st">"#D55E00"</span>)</span>
 <span id="cb100-14"><a href="#cb100-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb100-15"><a href="#cb100-15" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_ylabel(<span class="st">"% Variance Explained"</span>)</span>
 <span id="cb100-16"><a href="#cb100-16" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_title(<span class="st">"Scree Plot</span><span class="ch">\n</span><span class="st">Bars: individual PC variance  |  Line: cumulative variance"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb100-17"><a href="#cb100-17" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax.set_ylim(<span class="dv">0</span>, <span class="dv">110</span>)</span>
 <span id="cb100-18"><a href="#cb100-18" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">"center right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;matplotlib.legend.Legend object at 0x3146cff50&gt;</code></pre>
+<pre><code>&lt;matplotlib.legend.Legend object at 0x30aa20a10&gt;</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
@@ -3163,49 +3112,46 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 </figure>
 </div>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co">#p1 / p2 / p3 + plot_layout(guides = "collect")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="python-gridspec" class="level3">
 <h3 class="anchored" data-anchor-id="python-gridspec">Python — gridspec</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> fig.add_gridspec(<span class="dv">2</span>, <span class="dv">2</span>)</span>
-<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>ax1 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">0</span>])</span>
-<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>clinical_py, x<span class="op">=</span><span class="st">"biomarker"</span>, y<span class="op">=</span><span class="st">"followup_score"</span>, hue<span class="op">=</span><span class="st">"arm"</span>,</span>
-<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>                 palette<span class="op">=</span><span class="st">"viridis"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, ax<span class="op">=</span>ax1, legend<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.patches <span class="im">import</span> Patch</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>arms <span class="op">=</span> <span class="bu">list</span>(clinical_py[<span class="st">"arm"</span>].unique())          <span class="co"># or set your own order</span></span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>pal <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">zip</span>(arms, sns.color_palette(<span class="st">"viridis"</span>, n_colors<span class="op">=</span><span class="bu">len</span>(arms))))</span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a>gs <span class="op">=</span> fig.add_gridspec(<span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-9"><a href="#cb105-9" aria-hidden="true" tabindex="-1"></a>ax1 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">0</span>])</span>
+<span id="cb105-10"><a href="#cb105-10" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>clinical_py, x<span class="op">=</span><span class="st">"biomarker"</span>, y<span class="op">=</span><span class="st">"followup_score"</span>, hue<span class="op">=</span><span class="st">"arm"</span>,</span>
+<span id="cb105-11"><a href="#cb105-11" aria-hidden="true" tabindex="-1"></a>                hue_order<span class="op">=</span>arms, palette<span class="op">=</span>pal, alpha<span class="op">=</span><span class="fl">0.6</span>, ax<span class="op">=</span>ax1, legend<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;Axes: xlabel='biomarker', ylabel='followup_score'&gt;</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Text(0.5, 1.0, 'A')</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">1</span>])</span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>clinical_py, x<span class="op">=</span><span class="st">"arm"</span>, y<span class="op">=</span><span class="st">"followup_score"</span>, palette<span class="op">=</span><span class="st">"viridis"</span>, ax<span class="op">=</span>ax2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;Axes: xlabel='arm', ylabel='followup_score'&gt;</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"B"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Text(0.5, 1.0, 'B')</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="va">None</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Text(0.5, 0, '')</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>ax3 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, :])</span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(data<span class="op">=</span>clinical_py, x<span class="op">=</span><span class="st">"age"</span>, bins<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">"#21908C"</span>, ax<span class="op">=</span>ax3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;Axes: xlabel='age', ylabel='Count'&gt;</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>ax3.set_title(<span class="st">"C"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Text(0.5, 1.0, 'C')</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
-<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax1.set_title(<span class="st">"A"</span>, loc<span class="op">=</span><span class="st">"left"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>ax2 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>clinical_py, x<span class="op">=</span><span class="st">"arm"</span>, y<span class="op">=</span><span class="st">"followup_score"</span>, hue<span class="op">=</span><span class="st">"arm"</span>,</span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>            order<span class="op">=</span>arms, hue_order<span class="op">=</span>arms, palette<span class="op">=</span>pal, legend<span class="op">=</span><span class="va">False</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax2.set_title(<span class="st">"B"</span>, loc<span class="op">=</span><span class="st">"left"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax2.set_xlabel(<span class="va">None</span>)</span>
+<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a>ax3 <span class="op">=</span> fig.add_subplot(gs[<span class="dv">1</span>, :])</span>
+<span id="cb107-10"><a href="#cb107-10" aria-hidden="true" tabindex="-1"></a>sns.histplot(data<span class="op">=</span>clinical_py, x<span class="op">=</span><span class="st">"age"</span>, bins<span class="op">=</span><span class="dv">20</span>, color<span class="op">=</span><span class="st">"#21908C"</span>, ax<span class="op">=</span>ax3)</span>
+<span id="cb107-11"><a href="#cb107-11" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> ax3.set_title(<span class="st">"C"</span>, loc<span class="op">=</span><span class="st">"left"</span>, fontweight<span class="op">=</span><span class="st">"bold"</span>)</span>
+<span id="cb107-12"><a href="#cb107-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-13"><a href="#cb107-13" aria-hidden="true" tabindex="-1"></a><span class="co"># One legend for the whole figure, on the right</span></span>
+<span id="cb107-14"><a href="#cb107-14" aria-hidden="true" tabindex="-1"></a>handles <span class="op">=</span> [Patch(facecolor<span class="op">=</span>pal[a], label<span class="op">=</span>a) <span class="cf">for</span> a <span class="kw">in</span> arms]</span>
+<span id="cb107-15"><a href="#cb107-15" aria-hidden="true" tabindex="-1"></a>fig.legend(handles<span class="op">=</span>handles, title<span class="op">=</span><span class="st">"Arm"</span>, loc<span class="op">=</span><span class="st">"center left"</span>,</span>
+<span id="cb107-16"><a href="#cb107-16" aria-hidden="true" tabindex="-1"></a>           bbox_to_anchor<span class="op">=</span>(<span class="fl">1.0</span>, <span class="fl">0.5</span>), frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb107-17"><a href="#cb107-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb107-18"><a href="#cb107-18" aria-hidden="true" tabindex="-1"></a>sns.despine()</span>
+<span id="cb107-19"><a href="#cb107-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb107-20"><a href="#cb107-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3222,24 +3168,24 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 <section id="r" class="level3">
 <h3 class="anchored" data-anchor-id="r">R</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure1_km_curve.pdf"</span>,</span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="fu">last_plot</span>(),</span>
-<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">units =</span> <span class="st">"in"</span>, <span class="at">dpi =</span> <span class="dv">300</span></span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
-<span id="cb119-8"><a href="#cb119-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure1_km_curve.tiff"</span>,</span>
-<span id="cb119-9"><a href="#cb119-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="fu">last_plot</span>(),</span>
-<span id="cb119-10"><a href="#cb119-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">units =</span> <span class="st">"in"</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">compression =</span> <span class="st">"lzw"</span></span>
-<span id="cb119-11"><a href="#cb119-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure1_panel_qmd_R.pdf"</span>,</span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="fu">last_plot</span>(),</span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">units =</span> <span class="st">"in"</span>, <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"figure1_panel_qmd_R.tiff"</span>,</span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="fu">last_plot</span>(),</span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">units =</span> <span class="st">"in"</span>, <span class="at">dpi =</span> <span class="dv">300</span>, <span class="at">compression =</span> <span class="st">"lzw"</span></span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="python" class="level3">
 <h3 class="anchored" data-anchor-id="python">Python</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"figure1_km_curve.pdf"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
-<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"figure1_km_curve.tiff"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>, pil_kwargs<span class="op">=</span>{<span class="st">"compression"</span>: <span class="st">"tiff_lzw"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"figure1_panel_qmd_Python.pdf"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>)</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">"figure1_panel_qmd_Python.tiff"</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">"tight"</span>, pil_kwargs<span class="op">=</span>{<span class="st">"compression"</span>: <span class="st">"tiff_lzw"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <hr>
 </section>
@@ -3407,13 +3353,16 @@ Text(1, 0.7252252252252253, '55%')</code></pre>
 <li>Python: no built-in name, define manually:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>okabe_ito <span class="op">=</span> [<span class="st">'#E69F00'</span>, <span class="st">'#56B4E9'</span>, <span class="st">'#009E73'</span>, <span class="st">'#F0E442'</span>,</span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">'#0072B2'</span>, <span class="st">'#D55E00'</span>, <span class="st">'#CC79A7'</span>, <span class="st">'#000000'</span>]</span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'axes.prop_cycle'</span>] <span class="op">=</span> plt.cycler(color<span class="op">=</span>okabe_ito)</span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a><span class="co"># or: sns.set_palette(okabe_ito)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>okabe_ito <span class="op">=</span> [<span class="st">'#E69F00'</span>, <span class="st">'#56B4E9'</span>, <span class="st">'#009E73'</span>, <span class="st">'#F0E442'</span>,</span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">'#0072B2'</span>, <span class="st">'#D55E00'</span>, <span class="st">'#CC79A7'</span>, <span class="st">'#000000'</span>]</span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'axes.prop_cycle'</span>] <span class="op">=</span> plt.cycler(color<span class="op">=</span>okabe_ito)</span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="co"># or: sns.set_palette(okabe_ito)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Rule of thumb for this workshop:</strong> viridis for anything continuous (biomarker levels, scores, expression values), Okabe-Ito for anything categorical (treatment arm, sex, subgroup). This matches the convention used across Nature-family journals and is a safe default when you don’t know your reviewers’ or readers’ color vision status.</p>
+<blockquote class="blockquote">
+<p>Materials for this workshop were drafted with assistance from Claude (Anthropic) and reviewed and edited by the instructor.</p>
+</blockquote>
 </section>
 </section>
 

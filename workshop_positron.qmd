@@ -14,8 +14,6 @@ execute:
   message: false
 ---
 
-> Materials for this workshop were drafted with assistance from Claude (Anthropic) and reviewed and edited by the instructor.
-
 ## Setup
 
 This document runs both R and Python chunks side by side. In Positron, make sure
@@ -104,26 +102,6 @@ the shape of real trial data without using any real patient information.
 | age | Continuous | Normally distributed, mean 58, SD 12 |
 | sex | Categorical (2 levels) | Female (52%) / Male (48%) |
 | site | Categorical (4 levels) | Site_1-Site_4, randomly assigned (Site_3 has a real effect baked in -- see Section 11.3 note) |
-| smoker | Categorical (3 levels) | Never (50%), Former (30%), Current (20%) |
-| biomarker | Continuous | Right-skewed (gamma distribution, shape 2, scale 15) |
-| baseline_score | Continuous | Normally distributed, mean 50, SD 10 |
-| followup_score | Continuous | Baseline score minus a treatment effect (Treatment arm drops ~8 points on average; Control drops ~1 point) |
-| responder / response_label | Binary / Categorical | 1 = responder; higher response rate in Treatment (55%) vs. Control (30%) |
-| time_months / event | Continuous / Binary | Simulated time-to-event and event/censoring indicator (65% event rate) |
-
-Two companion datasets are generated later in the document: `longitudinal_data.csv`
-(same 200 patients, measured at 4 visits — week 0, 4, 8, 12) and `pca_data.csv`
-(same 200 patients with 6 synthetic correlated biomarkers, marker_1-marker_6).
-
-### R version
-
-| Column | Type | Description |
-|---|---|---|
-| patient_id | ID | Sequential, e.g. PT-001 to PT-200 |
-| arm | Categorical (2 levels) | Control or Treatment, randomly assigned ~50/50 |
-| age | Continuous | Normally distributed, mean 58, SD 12 |
-| sex | Categorical (2 levels) | Female (52%) / Male (48%) |
-| site | Categorical (4 levels) | Site_1-Site_4, randomly assigned |
 | smoker | Categorical (3 levels) | Never (50%), Former (30%), Current (20%) |
 | biomarker | Continuous | Right-skewed (gamma distribution, shape 2, scale 15) |
 | baseline_score | Continuous | Normally distributed, mean 50, SD 10 |
@@ -512,7 +490,7 @@ knobs for presentation quality.
 
 ### Quick reference table
 
-| Parameter | ggplot2 | Python (matplotlib/seaborn) | Typical publication value |
+| Parameter | R (ggplot2) | Python (matplotlib/seaborn) | Typical publication value |
 |---|---|---|---|
 | Point size | `size =` in `geom_point()` | `s=` (matplotlib) / `size=` (sns) | 2-4 (small multi-panel), 4-8 (single figure) |
 | Point shape/type | `shape =` (0-25, numeric codes) | `marker=` ('o', 's', '^', 'D', etc.) | Keep consistent per group across a paper |
@@ -782,11 +760,6 @@ table1_df.columns = [
     for col in table1_df.columns.to_flat_index()
 ]
 
-# Rendered HTML version (shows up inline in Positron's Plots/Viewer output area,
-# the same way an R gt/gtsummary table does — not the raw-data Data Viewer grid).
-# This works because Jupyter-based front ends (which Positron's Python chunks
-# use) automatically render a DataFrame's _repr_html_() as rich output when
-# it's the last expression in a cell.
 # Note: caption text omits "Table 1." since Quarto adds its own table
 # numbering/label automatically -- including it in both places duplicates it
 # (e.g., "Table 1: Table 1. Baseline Characteristics by Arm").
@@ -1025,7 +998,7 @@ Section 4's t-test vs. Wilcoxon decision).
 #| fig-height: 4
 ggplot(clinical_r, aes(x = followup_score, fill = arm)) +
   geom_density(alpha = 0.5) +
-  scale_fill_viridis_d(end = 0.8) +
+  scale_fill_viridis_d(end = 0.6) +
   labs(x = "Follow-up Score", y = "Density", fill = "Arm",
        title = "Follow-up Score Distribution by Arm") +
   theme_minimal(base_size = 12)
@@ -1083,7 +1056,7 @@ library(ggridges)
 
 ggplot(clinical_r, aes(x = followup_score, y = site, fill = site)) +
   geom_density_ridges(alpha = 0.7, scale = 1.2) +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(end = 0.8, direction = -1) +
   labs(x = "Follow-up Score", y = NULL, title = "Follow-up Score Distribution by Site") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "none")
@@ -1350,7 +1323,7 @@ ggplot(clinical_r, aes(x = arm, y = followup_score, fill = arm)) +
     method = "wilcox.test", label = "p.format",
     label.x = 1.5, hjust = 0.5
   ) +
-  scale_fill_viridis_d(end = 0.8) +
+  scale_fill_viridis_d(end = 0.6) +
   labs(x = NULL, y = "Follow-up Score", title = "Follow-up Score by Arm") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "none")
@@ -1456,18 +1429,13 @@ y_bracket <- max(summary_stats_r$mean_val + summary_stats_r$sd_val) * 1.12
 
 ggplot(summary_stats_r, aes(x = arm, y = mean_val, fill = arm)) +
   geom_col(alpha = 0.7, width = 0.6) +
-  geom_errorbar(
-    aes(ymin = mean_val - sd_val, ymax = mean_val + sd_val),
-    width = 0.2
-  ) +
-  geom_jitter(
-    data = clinical_r, aes(x = arm, y = followup_score),
-    width = 0.1, alpha = 0.3, inherit.aes = FALSE
-  ) +
+  geom_errorbar(aes(ymin = mean_val - sd_val, ymax = mean_val + sd_val), width = 0.2) +
+  geom_jitter(data = clinical_r, aes(x = arm, y = followup_score),
+              width = 0.1, alpha = 0.3, inherit.aes = FALSE) +
   annotate("segment", x = 1, xend = 2, y = y_bracket, yend = y_bracket) +
-  annotate("text", x = 1.5, y = y_bracket * 1.5, label = stars_r, size = 6) +
+  annotate("text", x = 1.5, y = y_bracket * 1.03, label = stars_r, size = 6) +
   scale_fill_viridis_d(end = 0.8) +
-  labs(x = NULL, y = "Follow-up Score (Mean ± SD)", title = "Mean Follow-up Score by Arm") +
+  labs(x = NULL, y = "Follow-up Score (Mean \u00b1 SD)", title = "Mean Follow-up Score by Arm") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "none")
 ```
@@ -1507,11 +1475,8 @@ stars_py = p_to_stars(p_val)
 fig, ax = plt.subplots(figsize=(6, 5))
 x_pos = np.arange(len(summary_stats_py))
 
-ax.bar(
-    x_pos, summary_stats_py["mean_val"],
-    yerr=summary_stats_py["sd_val"], capsize=6,
-    color=["#440154", "#21908C"], alpha=0.7, width=0.6
-)
+ax.bar(x_pos, summary_stats_py["mean_val"], yerr=summary_stats_py["sd_val"], capsize=6,
+       color=["#440154", "#21908C"], alpha=0.7, width=0.6)
 
 for i, arm in enumerate(summary_stats_py["arm"]):
     vals = clinical_py.loc[clinical_py.arm == arm, "followup_score"]
@@ -1520,7 +1485,7 @@ for i, arm in enumerate(summary_stats_py["arm"]):
 
 y_bracket = (summary_stats_py["mean_val"] + summary_stats_py["sd_val"]).max() * 1.12
 ax.plot([0, 0, 1, 1], [y_bracket, y_bracket*1.02, y_bracket*1.02, y_bracket], lw=1.2, color="black")
-ax.text(0.5, y_bracket * 1.3, stars_py, ha="center", va="bottom", fontsize=14)
+ax.text(0.5, y_bracket * 1.04, stars_py, ha="center", va="bottom", fontsize=14)
 
 ax.set_xticks(x_pos)
 ax.set_xticklabels(summary_stats_py["arm"])
@@ -1530,6 +1495,7 @@ _ = ax.set_ylim(top=y_bracket * 1.15)
 sns.despine()
 plt.tight_layout()
 plt.show()
+ 
 ```
 
 > **Teaching note:** star thresholds (`*`, `**`, `***`) are a widely used
@@ -1580,7 +1546,7 @@ ggplot(clinical_r, aes(x = site, y = followup_score, fill = site)) +
   geom_jitter(width = 0.15, alpha = 0.3) +
   stat_compare_means(
     method = "anova",
-    label.y = max(clinical_r$followup_score) * 1.15,
+    label.y = max(clinical_r$followup_score) * 1.5,
     label.x = (length(site_levels) + 1) / 2,
     hjust = 0.5
   ) +
@@ -1820,7 +1786,7 @@ pc_scores_r <- as_tibble(pca_fit_r$x) %>%
 
 ggplot(pc_scores_r, aes(x = PC1, y = PC2, color = arm)) +
   geom_point(size = 2.5, alpha = 0.75) +
-  stat_ellipse(level = 0.68) +
+  stat_ellipse(level = 0.95) +
   scale_color_viridis_d(end = 0.8) +
   labs(
     x = sprintf("PC1 (%.1f%% variance)", var_explained_r[1]),
@@ -1837,8 +1803,29 @@ ggplot(pc_scores_r, aes(x = PC1, y = PC2, color = arm)) +
 #| label: pca-score-py
 #| fig-width: 7
 #| fig-height: 5
+#| 
+import numpy as np
+from scipy.stats import chi2
+from matplotlib.patches import Ellipse
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+
+def add_confidence_ellipse(x, y, ax, level=0.95, **kwargs):
+    """Draw a covariance ellipse containing `level` of a bivariate normal."""
+    if len(x) < 3:
+        return
+    cov = np.cov(x, y)
+    eigvals, eigvecs = np.linalg.eigh(cov)
+    order = eigvals.argsort()[::-1]
+    eigvals, eigvecs = eigvals[order], eigvecs[:, order]
+
+    angle = np.degrees(np.arctan2(eigvecs[1, 0], eigvecs[0, 0]))
+    scale = np.sqrt(chi2.ppf(level, df=2))
+    width, height = 2 * scale * np.sqrt(eigvals)   # full axis lengths
+
+    ell = Ellipse(xy=(np.mean(x), np.mean(y)), width=width, height=height,
+                  angle=angle, fill=False, **kwargs)
+    ax.add_patch(ell)
 
 biomarker_cols = [f"marker_{i}" for i in range(1, 7)]
 X = pca_data_py[biomarker_cols].values
@@ -1855,6 +1842,8 @@ fig, ax = plt.subplots(figsize=(7, 5))
 for arm_name, color in colors.items():
     sub = pc_df[pc_df.arm == arm_name]
     ax.scatter(sub["PC1"], sub["PC2"], color=color, alpha=0.75, s=40, label=arm_name)
+    add_confidence_ellipse(sub["PC1"].values, sub["PC2"].values, ax,
+                           level=0.95, edgecolor=color, linewidth=1.5, linestyle="--")
 
 _ = ax.set_xlabel(f"PC1 ({var_explained[0]:.1f}% variance)")
 _ = ax.set_ylabel(f"PC2 ({var_explained[1]:.1f}% variance)")
@@ -1870,6 +1859,10 @@ plt.show()
 > numeric scales will dominate the components purely due to units, not
 > biological signal. Always scale unless your features are already on a
 > comparable, meaningful common scale.
+
+> **Sign flips:** Eigenvectors are only defined up to sign, so PC1 in R can be the negative of PC1 in Python.
+> Both are correct. The scores and loadings are mirrored, and the variance explained is identical.
+> If you need them to match for a plot, flip the sign of the affected component.
 
 ### Biplot (PC scores + loading vectors)
 
@@ -1985,18 +1978,34 @@ scree_df_r <- tibble(
   cumulative = cumsum(var_explained_r)
 )
 
+lvls <- c("Cumulative","Individual")
+
 ggplot(scree_df_r, aes(x = PC)) +
-  geom_col(aes(y = variance), fill = "#21908C", alpha = 0.8) +
-  geom_line(aes(y = cumulative, group = 1), color = "#D55E00", linewidth = 1) +
-  geom_point(aes(y = cumulative), color = "#D55E00", size = 2) +
-  geom_text(aes(y = variance, label = sprintf("%.1f%%", variance)), vjust = -0.8, size = 3) +
+  geom_col(aes(y = variance, fill = "Individual"), alpha = 0.8) +
+  geom_line(aes(y = cumulative, group = 1, color = "Cumulative"),
+            linewidth = 1) +
+  geom_point(aes(y = cumulative, color = "Cumulative"), size = 2) +
+  geom_text(aes(y = variance, label = sprintf("%.1f%%", variance)),
+            vjust = -0.8, size = 3) +
   geom_text(aes(y = cumulative, label = sprintf("%.0f%%", cumulative)),
-            vjust = -1, size = 3, color = "#D55E00") +
+            vjust = 1.8, size = 3, color = "#D55E00") +
+  scale_fill_manual(
+    name = NULL, limits = lvls,
+    values = c("Individual" = "#73b8ca", "Cumulative" = NA)
+  ) +
+  scale_color_manual(
+    name = NULL, limits = lvls,
+    values = c("Individual" = NA, "Cumulative" = "#D55E00")
+  ) +
   scale_y_continuous(limits = c(0, 105)) +
-  labs(x = NULL, y = "% Variance Explained",
-       title = "Scree Plot",
-       subtitle = "Bars: individual PC variance  |  Line: cumulative variance") +
-  theme_minimal(base_size = 12)
+  labs(x = NULL, y = "% Variance Explained", title = "Scree Plot") +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.85, 0.45),
+    legend.background = element_rect(fill = "white", color = "grey80"),
+    legend.margin = margin(4, 6, 4, 6)
+  )
 ```
 
 ```{python}
@@ -2009,13 +2018,13 @@ cumulative_full = np.cumsum(var_explained_full)
 
 fig, ax = plt.subplots(figsize=(6, 4))
 pcs = [f"PC{i+1}" for i in range(len(var_explained_full))]
-ax.bar(pcs, var_explained_full, color="#21908C", alpha=0.8, label="Individual")
+ax.bar(pcs, var_explained_full, color="#73b8ca", alpha=0.8, label="Individual")
 ax.plot(pcs, cumulative_full, color="#D55E00", marker="o", linewidth=2, label="Cumulative")
 
 for i, v in enumerate(var_explained_full):
     ax.text(i, v + 2, f"{v:.1f}%", ha="center", fontsize=8)
 for i, v in enumerate(cumulative_full):
-    ax.text(i, v + 2, f"{v:.0f}%", ha="center", fontsize=8, color="#D55E00")
+    ax.text(i, v - 6, f"{v:.0f}%", ha="center", fontsize=8, color="#D55E00")
 
 _ = ax.set_ylabel("% Variance Explained")
 _ = ax.set_title("Scree Plot\nBars: individual PC variance  |  Line: cumulative variance", fontsize=10)
@@ -2071,6 +2080,8 @@ p3 <- ggplot(clinical_r, aes(age)) +
   theme_minimal(base_size = 10) + labs(title = "C", x = "Age", y = "Count")
 
 (p1 | p2) / p3 + plot_layout(guides = "collect")
+
+#p1 / p2 / p3 + plot_layout(guides = "collect")
 ```
 
 ### Python — gridspec
@@ -2079,22 +2090,33 @@ p3 <- ggplot(clinical_r, aes(age)) +
 #| label: panel-py
 #| fig-width: 10
 #| fig-height: 8
+from matplotlib.patches import Patch
+
+arms = list(clinical_py["arm"].unique())          # or set your own order
+pal = dict(zip(arms, sns.color_palette("viridis", n_colors=len(arms))))
+
 fig = plt.figure(figsize=(10, 8))
 gs = fig.add_gridspec(2, 2)
 
 ax1 = fig.add_subplot(gs[0, 0])
 sns.scatterplot(data=clinical_py, x="biomarker", y="followup_score", hue="arm",
-                 palette="viridis", alpha=0.6, ax=ax1, legend=False)
-ax1.set_title("A")
+                hue_order=arms, palette=pal, alpha=0.6, ax=ax1, legend=False)
+_ = ax1.set_title("A", loc="left", fontweight="bold")
 
 ax2 = fig.add_subplot(gs[0, 1])
-sns.boxplot(data=clinical_py, x="arm", y="followup_score", palette="viridis", ax=ax2)
-ax2.set_title("B")
-ax2.set_xlabel(None)
+sns.boxplot(data=clinical_py, x="arm", y="followup_score", hue="arm",
+            order=arms, hue_order=arms, palette=pal, legend=False, ax=ax2)
+_ = ax2.set_title("B", loc="left", fontweight="bold")
+_ = ax2.set_xlabel(None)
 
 ax3 = fig.add_subplot(gs[1, :])
 sns.histplot(data=clinical_py, x="age", bins=20, color="#21908C", ax=ax3)
-ax3.set_title("C")
+_ = ax3.set_title("C", loc="left", fontweight="bold")
+
+# One legend for the whole figure, on the right
+handles = [Patch(facecolor=pal[a], label=a) for a in arms]
+fig.legend(handles=handles, title="Arm", loc="center left",
+           bbox_to_anchor=(1.0, 0.5), frameon=False)
 
 sns.despine()
 plt.tight_layout()
@@ -2111,13 +2133,13 @@ plt.show()
 #| label: export-r
 #| eval: false
 ggsave(
-  "figure1_km_curve.pdf",
+  "figure1_panel_qmd_R.pdf",
   plot = last_plot(),
   width = 7, height = 5, units = "in", dpi = 300
 )
 
 ggsave(
-  "figure1_km_curve.tiff",
+  "figure1_panel_qmd_R.tiff",
   plot = last_plot(),
   width = 7, height = 5, units = "in", dpi = 300, compression = "lzw"
 )
@@ -2128,8 +2150,8 @@ ggsave(
 ```{python}
 #| label: export-py
 #| eval: false
-fig.savefig("figure1_km_curve.pdf", dpi=300, bbox_inches="tight")
-fig.savefig("figure1_km_curve.tiff", dpi=300, bbox_inches="tight", pil_kwargs={"compression": "tiff_lzw"})
+fig.savefig("figure1_panel_qmd_Python.pdf", dpi=300, bbox_inches="tight")
+fig.savefig("figure1_panel_qmd_Python.tiff", dpi=300, bbox_inches="tight", pil_kwargs={"compression": "tiff_lzw"})
 ```
 
 ---
@@ -2239,3 +2261,5 @@ plt.rcParams['axes.prop_cycle'] = plt.cycler(color=okabe_ito)
 categorical (treatment arm, sex, subgroup). This matches the convention used
 across Nature-family journals and is a safe default when you don't know your
 reviewers' or readers' color vision status.
+
+> Materials for this workshop were drafted with assistance from Claude (Anthropic) and reviewed and edited by the instructor.

@@ -16,10 +16,7 @@ output:
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, dpi = 300)
 ```
 
-> Materials for this workshop (slides, speaker transcript, and this code
-> document) were drafted with assistance from Claude (Anthropic) and reviewed
-> and edited by the instructor prior to teaching.
->
+
 > **This is the R-only version of the workshop materials**, for attendees
 > using RStudio without a Python kernel available. A separate Jupyter
 > notebook version exists for Python-only attendees. A combined Quarto
@@ -392,7 +389,7 @@ ggplot(clinical_r, aes(x = biomarker)) +
 ```{r density-group, fig.width=6, fig.height=4}
 ggplot(clinical_r, aes(x = followup_score, fill = arm)) +
   geom_density(alpha = 0.5) +
-  scale_fill_viridis_d(end = 0.8) +
+  scale_fill_viridis_d(end = 0.6) +
   labs(x = "Follow-up Score", y = "Density", fill = "Arm",
        title = "Follow-up Score Distribution by Arm") +
   theme_minimal(base_size = 12)
@@ -405,7 +402,7 @@ library(ggridges)
 
 ggplot(clinical_r, aes(x = followup_score, y = site, fill = site)) +
   geom_density_ridges(alpha = 0.7, scale = 1.2) +
-  scale_fill_viridis_d() +
+  scale_fill_viridis_d(end = 0.8, direction = -1) +
   labs(x = "Follow-up Score", y = NULL, title = "Follow-up Score Distribution by Site") +
   theme_minimal(base_size = 12) +
   theme(legend.position = "none")
@@ -644,7 +641,7 @@ pc_scores_r <- as_tibble(pca_fit_r$x) %>%
 
 ggplot(pc_scores_r, aes(x = PC1, y = PC2, color = arm)) +
   geom_point(size = 2.5, alpha = 0.75) +
-  stat_ellipse(level = 0.68) +
+  stat_ellipse(level = 0.95) +
   scale_color_viridis_d(end = 0.8) +
   labs(
     x = sprintf("PC1 (%.1f%% variance)", var_explained_r[1]),
@@ -694,17 +691,34 @@ scree_df_r <- tibble(
   cumulative = cumsum(var_explained_r)
 )
 
+lvls <- c("Cumulative","Individual")
+
 ggplot(scree_df_r, aes(x = PC)) +
-  geom_col(aes(y = variance), fill = "#21908C", alpha = 0.8) +
-  geom_line(aes(y = cumulative, group = 1), color = "#D55E00", linewidth = 1) +
-  geom_point(aes(y = cumulative), color = "#D55E00", size = 2) +
-  geom_text(aes(y = variance, label = sprintf("%.1f%%", variance)), vjust = -0.8, size = 3) +
+  geom_col(aes(y = variance, fill = "Individual"), alpha = 0.8) +
+  geom_line(aes(y = cumulative, group = 1, color = "Cumulative"),
+            linewidth = 1) +
+  geom_point(aes(y = cumulative, color = "Cumulative"), size = 2) +
+  geom_text(aes(y = variance, label = sprintf("%.1f%%", variance)),
+            vjust = -0.8, size = 3) +
   geom_text(aes(y = cumulative, label = sprintf("%.0f%%", cumulative)),
-            vjust = -1, size = 3, color = "#D55E00") +
+            vjust = 1.8, size = 3, color = "#D55E00") +
+  scale_fill_manual(
+    name = NULL, limits = lvls,
+    values = c("Individual" = "#73b8ca", "Cumulative" = NA)
+  ) +
+  scale_color_manual(
+    name = NULL, limits = lvls,
+    values = c("Individual" = NA, "Cumulative" = "#D55E00")
+  ) +
   scale_y_continuous(limits = c(0, 105)) +
-  labs(x = NULL, y = "% Variance Explained", title = "Scree Plot",
-       subtitle = "Bars: individual PC variance  |  Line: cumulative variance") +
-  theme_minimal(base_size = 12)
+  labs(x = NULL, y = "% Variance Explained", title = "Scree Plot") +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "inside",
+    legend.position.inside = c(0.85, 0.45),
+    legend.background = element_rect(fill = "white", color = "grey80"),
+    legend.margin = margin(4, 6, 4, 6)
+  )
 ```
 
 ### PCA notes
@@ -735,6 +749,8 @@ p3 <- ggplot(clinical_r, aes(age)) +
   theme_minimal(base_size = 10) + labs(title = "C", x = "Age", y = "Count")
 
 (p1 | p2) / p3 + plot_layout(guides = "collect")
+
+#p1 / p2 / p3 + plot_layout(guides = "collect")
 ```
 
 ---
@@ -742,10 +758,10 @@ p3 <- ggplot(clinical_r, aes(age)) +
 ## 15. Exporting for Publication
 
 ```{r export, eval=FALSE}
-ggsave("figure1_km_curve.pdf", plot = last_plot(),
+ggsave("figure1_panel_R.pdf", plot = last_plot(),
        width = 7, height = 5, units = "in", dpi = 300)
 
-ggsave("figure1_km_curve.tiff", plot = last_plot(),
+ggsave("figure1_panel_R.tiff", plot = last_plot(),
        width = 7, height = 5, units = "in", dpi = 300, compression = "lzw")
 ```
 
@@ -794,3 +810,6 @@ Methods commentary (doi:10.1038/nmeth.1618). R: base R 4.0+ via
 `palette.colors()`, or ggplot2 >= 3.4.0 via `scale_color_okabeito()`.
 
 **Rule of thumb:** viridis for continuous data, Okabe-Ito for categorical data.
+
+> Materials for this code document were drafted with assistance from Claude 
+> (Anthropic) and reviewed and edited by the instructor prior to teaching.
