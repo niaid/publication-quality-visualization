@@ -17,3 +17,4 @@ __pycache__/
 # Quarto / knitr cache
 *_cache/
 *_files/libs/
+~$*
