@@ -28,7 +28,7 @@ Complete these steps the night before the workshop so you are ready to code alon
 | Software | Tested version | Download |
 |---|---|---|
 | R | 4.6.1 | https://cran.r-project.org |
-| Python | 3.10–3.12 | https://www.python.org/downloads |
+| Python | 3.9.6–3.11.17 (tested) | https://www.python.org/downloads |
 | Quarto | latest | https://quarto.org/docs/get-started |
 | Positron | latest | https://github.com/posit-dev/positron/releases |
 
