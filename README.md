@@ -19,11 +19,71 @@ Both versions cover the same sections and produce equivalent figures.
 
 ---
 
+## Before You Arrive
+
+Complete these steps the night before the workshop so you are ready to code along from the first minute.
+
+### 1. Install the required software
+
+| Software | Tested version | Download |
+|---|---|---|
+| R | 4.6.1 | https://cran.r-project.org |
+| Python | 3.10–3.12 | https://www.python.org/downloads |
+| Quarto | latest | https://quarto.org/docs/get-started |
+| Positron | latest | https://github.com/posit-dev/positron/releases |
+
+### 2. Choose your path
+
+| Path | File to open | Setup steps below |
+|---|---|---|
+| R only | `workshop_positron.qmd` | R packages only |
+| Python only | `Python_version/workshop_Python.ipynb` | Python packages only |
+| Both | both files | R and Python packages |
+
+### 3. Install R packages
+
+In an R console:
+
+```r
+source("install_packages.R")
+```
+
+### 4. Install Python packages
+
+In a terminal:
+
+```bash
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r Python_version/requirements.txt
+```
+
+### 5. Verify your setup
+
+Run the check scripts to confirm everything loaded correctly:
+
+```r
+# R
+Rscript check_setup.R
+```
+
+```bash
+# Python
+python Python_version/check_setup.py
+```
+
+Each script prints the version of every package and exits with an error if anything is missing.
+
+### Positron setup note
+
+Open `workshop_positron.qmd` in Positron for the R version, or `Python_version/workshop_Python.ipynb` for the Python version. Each file runs in its own kernel — no cross-language setup required.
+
+---
+
 ## Repository Layout
 
 ```
 Publication Quality Visualization_workshop/
-├── workshop_positron.qmd          # Combined R+Python Quarto document (Positron edition)
+├── workshop_positron.qmd          # R Quarto document (Positron edition)
 ├── workshop_positron.html         # Pre-rendered HTML output of the Quarto document
 ├── Publication Quality Visualization_workshop.pdf        # Slide deck used during the live workshop
 │
@@ -123,29 +183,6 @@ Same 200 patients measured at weeks 0, 4, 8, and 12. Used for the line chart sec
 ### `pca_data.csv` — multi-biomarker dataset (200 rows)
 
 Same 200 patients with 6 synthetic correlated biomarkers (`marker_1`–`marker_6`) plus `patient_id`, `arm`, `site`. Used for the PCA sections.
-
----
-
-## Package Requirements
-
-### R
-
-```r
-install.packages(c(
-  "tidyverse", "tidyplots", "survival", "survminer", "patchwork",
-  "ggpubr", "viridis", "gtsummary", "gt",
-  "ggridges", "pROC", "svglite"
-))
-```
-
-### Python
-
-```bash
-pip install pandas numpy matplotlib seaborn lifelines statannotations \
-            scipy tableone scikit-learn statsmodels joypy
-```
-
-> **Positron setup note:** R and Python run as separate kernel processes in Positron. Install Python packages from Positron's Python console (or a terminal using the exact interpreter that console uses — confirm with `python -c "import sys; print(sys.executable)"`). Installing via `reticulate::repl_python()` from the R console installs into a different Python than the one Quarto's `{python}` chunks use, and packages installed there will not be importable in the document.
 
 ---
 

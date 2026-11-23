@@ -25,7 +25,7 @@ Section 3), so run the chunks in order.
 > file that is distributed with the workshop materials. It follows the same
 > sections and produces equivalent figures.
  
-**Requirements:** R 4.1 or newer (the native pipe `|>` is used in the
+**Requirements:** R 4.6.1 or newer (the native pipe `|>` is used in the
 tidyplots examples) and `ggplot2` 3.5.0 or newer (for
 `legend.position = "inside"`).
  
@@ -1074,6 +1074,7 @@ theme_gtsummary_journal("jama")
 table1_custom %>% as_gt() %>% gt::gtsave("figures/table1.html")
  
 # Save as Word (needs the flextable package)
+library(flextable)
 table1_custom %>% as_flex_table() %>% flextable::save_as_docx(path = "figures/table1.docx")
 ```
  
