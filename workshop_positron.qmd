@@ -37,7 +37,7 @@ tidyplots examples) and `ggplot2` 3.5.0 or newer (for
 install.packages(c(
   "tidyverse", "tidyplots", "survival", "survminer", "patchwork",
   "ggpubr", "viridis", "forestplot", "gtsummary", "gt",
-  "table1", "ggridges", "pROC", "svglite"
+  "table1", "ggridges", "pROC", "svglite", "flextable"
 ))
 ```
  
