@@ -73,7 +73,7 @@ python Python_version/check_setup.py
 
 Each script prints the version of every package and exits with an error if anything is missing.
 
-### Positron setup note
+### Opening the files
 
 Open `workshop_positron.qmd` in Positron, RStudio, or VS Code (with the Quarto extension) for the R version, or `Python_version/workshop_Python.ipynb` for the Python version. Each file runs in its own kernel — no cross-language setup required.
 
